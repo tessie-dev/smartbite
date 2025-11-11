@@ -1,5 +1,8 @@
 # 🍽️ SmartBite - Iteration Summary
 
+🎥 **Project Demo:** [Watch on YouTube](https://www.youtube.com/watch?v=kSHSInWX7KU)  
+🧭 **System Logic Flows:** [View on Whimsical](https://whimsical.com/nutrition-FxvoKiv6A7tb2V9vPhapdU)  
+
 ## 1. Data Model & Collections  
 We have structured our Firestore database to ensure **efficient data retrieval, scalability, and user-specific data security**.
 
