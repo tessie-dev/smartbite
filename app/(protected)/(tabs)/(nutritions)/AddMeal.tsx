@@ -3,6 +3,7 @@ import { router } from 'expo-router';
 import { writeMealToDB, writeNutritionToDB, analyzeNutrition} from '@/firebase/nutritionHelper';
 import { Timestamp } from 'firebase/firestore';
 import MealForm from '@/components/MealForm';
+import NutritionLoading from '@/components/NutritionLoading';
 import { useContext, useEffect, useState } from 'react';
 import { ThemeContext } from '@/ThemeContext';
 import { Meal } from '@/types';
@@ -16,6 +17,7 @@ export default function AddMeal() {
   const { theme } = useContext(ThemeContext);
   const [currentTheme, setCurrentTheme] = useState(theme);
   const [userId, setUserId] = useState<string>("testUser");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     setCurrentTheme(theme);
@@ -61,7 +63,9 @@ export default function AddMeal() {
 
     const mealId = await writeMealToDB(userId, newMeal);
     if (mealId) {
+      setIsLoading(true);
       await analyzeNutrition(userId, mealId, meal.ingredients);
+      setIsLoading(false);
     } else {
       console.error("Error: mealId is undefined");
     }
@@ -71,6 +75,7 @@ export default function AddMeal() {
   return (
     <View style={[styles.container, { backgroundColor: currentTheme.background }]}>
       <MealForm onSubmit={handleSave} />
+      <NutritionLoading visible={isLoading} />
     </View>
   )
 }
