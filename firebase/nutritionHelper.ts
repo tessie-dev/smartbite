@@ -15,21 +15,69 @@ export async function writeMealToDB(userId:string, data: DocumentData) {
 }
 
 export async function analyzeNutrition(userId: string, mealId: string, ingredients: string[]) {
-    const API_ID = process.env.EXPO_PUBLIC_EDAMAM_APP_ID;
-    const API_KEY = process.env.EXPO_PUBLIC_EDAMAM_APP_KEY;
+      // Edamam API call to analyze nutrition  
+      // const API_ID = process.env.EXPO_PUBLIC_EDAMAM_APP_ID;
+      // const API_KEY = process.env.EXPO_PUBLIC_EDAMAM_APP_KEY;
 
-    try {
-      const response = await fetch(
-        `https://api.edamam.com/api/nutrition-details?app_id=${API_ID}&app_key=${API_KEY}`,
-        {
-          method: "POST",
-          headers: { 
-            "Content-Type": "application/json",
-            // "Edamam-Account-User": API_ID 
-          },
-          body: JSON.stringify({ ingr: ingredients }),
-        }
-      );
+      try {
+      //   const response = await fetch(
+      //     `https://api.edamam.com/api/nutrition-details?app_id=${API_ID}&app_key=${API_KEY}`,
+      //     {
+      //       method: "POST",
+      //       headers: { 
+      //         "Content-Type": "application/json",
+      //         // "Edamam-Account-User": API_ID 
+      //       },
+      //       body: JSON.stringify({ ingr: ingredients }),
+      //     }
+      //   );
+
+      // use OpenAI API for nutrition analysis
+      const response = await fetch("https://api.openai.com/v1/responses", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${process.env.EXPO_PUBLIC_OPENAI_API_KEY}`,
+        },
+        body: JSON.stringify({
+          model: "gpt-4.1-mini",
+          input: `
+          You are a nutrition analysis assistant.
+
+          Given a list of ingredients with quantities, estimate the total nutrition for the entire meal.
+
+          Return a JSON object with this exact structure:
+
+          {
+            "calories": number,
+            "totalNutrients": {
+              "FAT":   { "label": "Total lipid (fat)",                "quantity": number, "unit": "g"  },
+              "FASAT": { "label": "Fatty acids, total saturated",     "quantity": number, "unit": "g"  },
+              "FATRN": { "label": "Fatty acids, total trans",         "quantity": number, "unit": "g"  },
+              "CHOCDF":{ "label": "Carbohydrate, by difference",      "quantity": number, "unit": "g"  },
+              "SUGAR": { "label": "Sugars, total",                    "quantity": number, "unit": "g"  },
+              "FIBTG": { "label": "Fiber, total dietary",             "quantity": number, "unit": "g"  },
+              "PROCNT":{ "label": "Protein",                          "quantity": number, "unit": "g"  },
+              "NA":    { "label": "Sodium, Na",                       "quantity": number, "unit": "mg" },
+              "CHOLE": { "label": "Cholesterol",                      "quantity": number, "unit": "mg" },
+              "K":     { "label": "Potassium, K",                     "quantity": number, "unit": "mg" },
+              "CA":    { "label": "Calcium, Ca",                      "quantity": number, "unit": "mg" },
+              "FE":    { "label": "Iron, Fe",                         "quantity": number, "unit": "mg" },
+              "VITD":  { "label": "Vitamin D (D2 + D3)",              "quantity": number, "unit": "µg" }
+            }
+          }
+
+          Rules:
+          - Return RAW JSON only.
+          - No code blocks.
+          - No explanation.
+
+          Ingredients: ${ingredients.join(", ")}
+          `,
+        }),
+      });
+
+  
       
       if (!response.ok) {
         const responseText = await response.text();
@@ -46,8 +94,15 @@ export async function analyzeNutrition(userId: string, mealId: string, ingredien
         return;
       }
 
-      const nutritionData = await response.json();
-      if (!nutritionData.totalNutrients || !nutritionData.totalDaily) {
+      // const nutritionData = await response.json();
+      // if (!nutritionData.totalNutrients || !nutritionData.totalDaily) {
+      //   throw new Error("Invalid response from API");
+      // }
+
+      const result = await response.json();
+      const text = result.output[0].content[0].text.trim();
+      const nutritionData = JSON.parse(text);
+      if (!nutritionData.totalNutrients || !nutritionData.calories) {
         throw new Error("Invalid response from API");
       }
   

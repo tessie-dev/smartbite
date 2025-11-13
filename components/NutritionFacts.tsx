@@ -8,7 +8,23 @@ interface NutritionFactsProps {
     nutrients: Nutrition;
 }
 
-const keyNutrients = ["FAT", "FASAT", "FATRN", "CHOLE", "NA", "CHOCDF", "PROCNT", "VITD", "CA", "FE", "K"];
+// const keyNutrients = ["FAT", "FASAT", "FATRN", "CHOLE", "NA", "CHOCDF", "PROCNT", "VITD", "CA", "FE", "K"];
+const keyNutrients = [
+  "FAT",    // Total lipid (fat)
+  "FASAT",  // Saturated fat
+  "FATRN",  // Trans fat
+  "CHOCDF", // Carbohydrates
+  "SUGAR",  // Sugars
+  "FIBTG",  // Fiber
+  "PROCNT", // Protein
+  "NA",     // Sodium
+  "CHOLE",  // Cholesterol
+  "K",      // Potassium
+  "CA",     // Calcium
+  "FE",     // Iron
+  "VITD",   // Vitamin D
+];
+
 
 export default function NutritionFacts({ nutrients }: NutritionFactsProps) {
   const calories = nutrients.calories || 0;
