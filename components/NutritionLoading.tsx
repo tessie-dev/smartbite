@@ -21,15 +21,17 @@ export default function NutritionLoading({ visible }: NutritionLoadingProps) {
           alignItems: "center"
         }}>
           <ActivityIndicator size="small" color="#4CAF50" />
-          <Text style={{ marginTop: 15, fontSize: 16 }}>
+          <Text style={{ marginTop: 10, fontSize: 16 }}>
             Analyzing nutrition...
           </Text>
           <Text
             style={{
               marginTop: 8,
-              fontSize: 14,
+              fontSize: 12,
               color: "#555",
               textAlign: "center",
+              lineHeight: 18, 
+              width: 180, 
             }}
           >
             This may take a few seconds.{"\n"}Thanks for your patience!
