@@ -50,7 +50,16 @@ export default function TabsLayout() {
           ),
         }}
       />
+      <Tabs.Screen
+        name="(agent)"
+        options={{
+          title: 'AI',
+          headerTitle: 'AI Meal Agent',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="sparkles-outline" size={size} color={color} />
+          ),
+        }}
+      />
     </Tabs>
   );
 }
-

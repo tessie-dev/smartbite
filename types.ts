@@ -81,3 +81,18 @@ export interface LocationData {
   latitude: number;
   longitude: number;
 }
+
+export type MealSuggestion = {
+  title: string;
+  reason: string;
+  estimatedCalories?: number;
+};
+
+export type SuggestMealRequest = {
+  question: string;
+};
+
+export type SuggestMealResponse = {
+  summary: string;
+  suggestions: MealSuggestion[];
+};
